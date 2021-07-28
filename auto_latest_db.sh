@@ -12,35 +12,24 @@ if [ $OS -ne 3 ];then
 echo "Sorry, Sir, Your System is not CentOS 7!"
 exit 1
 fi
-if [ ! -d /home/tools/ ];then
-mkdir -p /home/tools
-else
-rm -rf /home/tools && mkdir -p /home/tools
-fi
-
 
 systemctl stop firewalld.service
 systemctl disable firewalld.service
 sed -i '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
 setenforce 0
-cd /home/tools
-#download packages for mariadb
-git clone https://github.com/jinyan2049/auto_install_mariadb.git
 
-if [ $? -eq 0 ];then
+yum update -y --exclude=kernel*
+sleep 2
 yum -y install openssl openssl-devel epel-release perl perl-DBI jemalloc jemalloc-devel lsof rsync libaio boost ncurses-compat-libs
-else 
-exie 1
-fi
 
 #waiting 2 seconds
-sleep 2
+sleep 5
 
 #setting my.cnf file
 if [ $? -eq 0 ];then
-rpm -qa|grep mariadb|xargs rpm -e --nodeps
+rpm -qa|grep mariadb|xargs rpm -e --nodeps && rpm -qa|grep galera|xargs rpm -e --nodeps
 sleep 2
-cd /home/tools/auto_install_mariadb && rpm -Uvh *.rpm
+cd $PWD && rpm -Uvh *.rpm
 fi
 mkdir -p /data/{mysql_data,mysql_log,mysql_slow,mysql_undo}
 chown -R mysql.mysql /data/*
