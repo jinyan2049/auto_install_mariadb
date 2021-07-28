@@ -160,6 +160,7 @@ mysqladmin -uroot password "$password"
 
 #Delete user
 mysql -uroot -p"$password" -e "delete from mysql.user where user='' or password='';"
+mysql -uroot -p"$password" -e "drop database test;"
 mysql -uroot -p"$password" -e "flush privileges;"
 echo Your password is "$password"
 
