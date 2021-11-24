@@ -154,6 +154,9 @@ mysql_install_db --user=mysql --datadir=/data/mysql_data
 #Start MySQL
 service mysql start
 
+#Enabled MySQL
+systemctl enable mariadb
+
 #Setting password from MySQL
 read -s -p "Enter password : " password
 mysqladmin -uroot password "$password"
