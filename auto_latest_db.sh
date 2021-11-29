@@ -18,6 +18,18 @@ systemctl disable firewalld.service
 sed -i '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
 setenforce 0
 
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+
+sleep 1
+
+yum clean all
+
+sleep 1
+
+yum makecache
+
+
 yum update -y --exclude=kernel*
 sleep 2
 yum -y install openssl openssl-devel epel-release perl perl-DBI jemalloc jemalloc-devel lsof rsync libaio boost ncurses-compat-libs
@@ -164,6 +176,7 @@ mysqladmin -uroot password "$password"
 #Delete user
 mysql -uroot -p"$password" -e "delete from mysql.user where user='' or password='';"
 mysql -uroot -p"$password" -e "drop database test;"
+mysql -uroot -p"$password" -e "grant all on *.* to admin@'%' identified by 'aabb1122';"
 mysql -uroot -p"$password" -e "flush privileges;"
 echo Your password is "$password"
 
